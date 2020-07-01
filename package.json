@@ -1,0 +1,30 @@
+{
+  "name": "based-router",
+  "version": "0.0.0",
+  "description": "一个简单的路由器",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yinjiazeng/based-router.git"
+  },
+  "keywords": [
+    "router"
+  ],
+  "author": "yinjiazeng@163.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yinjiazeng/based-router/issues"
+  },
+  "homepage": "https://github.com/yinjiazeng/based-router#readme",
+  "dependencies": {
+    "lodash": "^4.17.15",
+    "warning": "^4.0.3"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.157",
+    "@types/warning": "^3.0.0"
+  }
+}
