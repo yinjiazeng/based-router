@@ -1,7 +1,5 @@
 import warning from 'warning';
-import {
-  isFunction, isObjectLike, isString, globalWindow,
-} from './utils';
+import { isFunction, isObjectLike, isString, globalWindow } from './utils';
 import parser, { pathToRegexp, normalizePath, restorePath } from './parser';
 
 let globalLocation = globalWindow.location;
@@ -308,9 +306,7 @@ function mergePath(...args) {
   return normalizePath(paths.join('/'));
 }
 
-export {
-  getLocation, createRouter, blockData, combinePath, match,
-};
+export { getLocation, createRouter, blockData, combinePath, match };
 
 export default {
   listener,

@@ -2,19 +2,20 @@
   "root": true,
   "parser": "@typescript-eslint/parser",
   "extends": [
-    "airbnb-base"
+    "airbnb-base",
+    "prettier"
   ],
   "plugins": [
-    "prettier",
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "prettier"
   ],
   "rules": {
-    "dot-notation": 0,
-    "no-unused-vars": 0,
-    "import/extensions": 0,
-    "import/no-unresolved": 0,
-    "no-return-assign": 0,
-    "consistent-return": 0
+    "prettier/prettier": "error",
+    "no-unused-vars": "off",
+    "import/extensions": "off",
+    "import/no-unresolved": "off",
+    "no-return-assign": "off",
+    "consistent-return": "off"
   },
   "env": {
     "es6": true,

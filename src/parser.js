@@ -35,9 +35,7 @@ export function restorePath(object) {
   }
 
   let path = '';
-  const {
-    pathname, query, search, url, hash,
-  } = object;
+  const { pathname, query, search, url, hash } = object;
 
   if (!!url && isString(url)) {
     path = url;
