@@ -45,7 +45,7 @@ let blockCallback: Function | null = null;
 // 阻塞路由控制
 export let blockData: BlockData = {};
 
-export const getOriginPath = () => {
+const getOriginPath = () => {
   const { pathname, search, hash } = globalWindow.location;
   let originPath = '';
 
@@ -58,36 +58,14 @@ export const getOriginPath = () => {
   return decodeURI(originPath);
 };
 
-export const getLocation = () => {
-  const originPath = getOriginPath();
-  return parser(originPath.replace(new RegExp(`^${options.basename}`), ''));
-};
-
-export const getMergeLocation = () => {
+const getMergeLocation = () => {
   const mergeLocation = { ...getLocation(), ...extraData };
   // 临时数据，仅用一次
   extraData = {};
   return mergeLocation;
 };
 
-export const block = (callback: BlockCallback) => {
-  if (!blockCallback) {
-    if (isFunction(callback)) {
-      blockCallback = (enter: Function, restore: Function, toLocation: MergeLocation) => {
-        const isLeave = callback(currentLocation, toLocation, () => enter()) !== false;
-        if (isLeave) {
-          enter(isLeave);
-        } else {
-          restore(currentLocation.url);
-        }
-      };
-    }
-  } else {
-    warning(false, 'router.block只能调用一次');
-  }
-};
-
-export const callListener = (location?: any) => {
+const callListener = (location?: any) => {
   // 一次change可能有多个listeners，只创建一次location
   let current = location;
   listeners.forEach((callback) => {
@@ -98,7 +76,7 @@ export const callListener = (location?: any) => {
   });
 };
 
-export const routerEventListener = () => {
+const routerEventListener = () => {
   if (listenerFlag) {
     // 检测路由是否冻结
     if (listenerFlag === 1 && (isFunction(blockData.callback) || isFunction(blockCallback))) {
@@ -137,25 +115,7 @@ export const routerEventListener = () => {
   listenerFlag = 1;
 };
 
-export const combinePath = (path: LocationObject | string = '') => {
-  const url = restorePath(path);
-  const searchIndex = url.indexOf('?');
-  const hashIndex = url.indexOf('#');
-  let pathname = url;
-  let rest = '';
-
-  if (searchIndex !== -1) {
-    pathname = url.substr(0, searchIndex);
-    rest = url.substr(searchIndex);
-  } else if (hashIndex !== -1) {
-    pathname = url.substr(0, hashIndex);
-    rest = url.substr(hashIndex);
-  }
-
-  return normalizePath(`${options.basename}/${pathname}`) + rest;
-};
-
-export const locationHandle = (...args: any) => {
+const routeTo = (...args: any) => {
   const type = args[0];
   const path = args[1];
   const data = args[2];
@@ -195,12 +155,52 @@ export const locationHandle = (...args: any) => {
   }
 };
 
+export const getLocation = () => {
+  const originPath = getOriginPath();
+  return parser(originPath.replace(new RegExp(`^${options.basename}`), ''));
+};
+
+export const block = (callback: BlockCallback) => {
+  if (!blockCallback) {
+    if (isFunction(callback)) {
+      blockCallback = (enter: Function, restore: Function, toLocation: MergeLocation) => {
+        const isLeave = callback(currentLocation, toLocation, () => enter()) !== false;
+        if (isLeave) {
+          enter(isLeave);
+        } else {
+          restore(currentLocation.url);
+        }
+      };
+    }
+  } else {
+    warning(false, 'router.block只能调用一次');
+  }
+};
+
+export const combinePath = (path: LocationObject | string = '') => {
+  const url = restorePath(path);
+  const searchIndex = url.indexOf('?');
+  const hashIndex = url.indexOf('#');
+  let pathname = url;
+  let rest = '';
+
+  if (searchIndex !== -1) {
+    pathname = url.substr(0, searchIndex);
+    rest = url.substr(searchIndex);
+  } else if (hashIndex !== -1) {
+    pathname = url.substr(0, hashIndex);
+    rest = url.substr(hashIndex);
+  }
+
+  return normalizePath(`${options.basename}/${pathname}`) + rest;
+};
+
 export const push: PushFunction = (...args: any) => {
-  locationHandle('push', ...args);
+  routeTo('push', ...args);
 };
 
 export const replace: PushFunction = (...args: any) => {
-  locationHandle('replace', ...args);
+  routeTo('replace', ...args);
 };
 
 export const reload = () => {
