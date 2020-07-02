@@ -1,5 +1,5 @@
 import isString from 'lodash/isString';
-import isObjectLike from 'lodash/isObjectLike';
+import isPlainObject from 'lodash/isPlainObject';
 import isFunction from 'lodash/isFunction';
 import noop from 'lodash/noop';
 
@@ -18,7 +18,9 @@ export const globalWindow =
         history: {
           pushState: noop,
           replaceState: noop,
+          back: noop,
+          forward: noop,
         },
       };
 
-export { isString, isObjectLike, isFunction, noop };
+export { isString, isPlainObject, isFunction, noop };

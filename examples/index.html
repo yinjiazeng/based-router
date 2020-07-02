@@ -19,17 +19,18 @@
   <script>
   const root = document.getElementById('root');
   router.create(function(location) {
-    if (router.matchPath(location, '/')) {
+    let match;
+    if (match = router.matchPath(location, '/')) {
       root.innerHTML = `这是首页`;
-    } else if (router.matchPath(location, '/list')) {
+    } else if (match = router.matchPath(location, '/list')) {
       root.innerHTML =
         `<ul>
           <li><a href="#/detail/1">标题1</a></li>
           <li><a href="#/detail/2">标题2</a></li>
           <li><a href="#/detail/3">标题3</a></li>
         </ul>`;
-    } else if (router.matchPath(location, '/detail/:id')) {
-      root.innerHTML = `这是内容，id是${location.params.id}`;
+    } else if (match = router.matchPath(location, '/detail/:id')) {
+      root.innerHTML = `这是内容，id是${match.params.id}`;
     } else {
       root.innerHTML = `404`;
     }

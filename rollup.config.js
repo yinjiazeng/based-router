@@ -12,7 +12,7 @@ const config = {
     'warning',
     'lodash/isFunction',
     'lodash/isString',
-    'lodash/isObjectLike',
+    'lodash/isPlainObject',
     'lodash/noop',
   ],
   output: {
@@ -24,7 +24,7 @@ const config = {
       warning: 'warning',
       'lodash/isFunction': '_.isFunction',
       'lodash/isString': '_.isString',
-      'lodash/isObjectLike': '_.isObjectLike',
+      'lodash/isPlainObject': '_.isPlainObject',
       'lodash/noop': '_.noop',
     },
   },
