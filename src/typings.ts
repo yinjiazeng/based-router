@@ -43,7 +43,7 @@ export interface BlockData {
 }
 
 export interface ListenerCallback {
-  (location: MergeLocation): void;
+  (location: MergeLocation, isInit?: boolean): void;
 }
 
 export interface BlockCallback {
@@ -57,6 +57,6 @@ export interface PushFunction {
 }
 
 export interface CreateRouterFunction {
-  (routerOptions: RouterOptions, callback: ListenerCallback): Function | void;
-  (callback: ListenerCallback): Function | void;
+  (routerOptions: RouterOptions, callback: ListenerCallback): Function | undefined;
+  (callback: ListenerCallback): Function | undefined;
 }

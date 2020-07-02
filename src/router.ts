@@ -36,12 +36,12 @@ const defaultOptions = {
 };
 // 路由选项
 let options = defaultOptions;
-// 卸载路由
-let unmount: Function | null = null;
 // 当前location
 let currentLocation: MergeLocation;
 // 阻塞回调
 let blockCallback: Function | null = null;
+// 卸载回调
+let unmount: any = null;
 // 阻塞路由控制
 export let blockData: BlockData = {};
 
@@ -173,7 +173,7 @@ export const block = (callback: BlockCallback) => {
       };
     }
   } else {
-    warning(false, 'router.block只能调用一次');
+    warning(false, 'Router blocking can only be created once!');
   }
 };
 
@@ -246,7 +246,7 @@ export const create: CreateRouterFunction = (...args: any) => {
   }
 
   if (routerOptions && routerOptions.context) {
-    if (isFunction(unmount)) {
+    if (unmount) {
       unmount();
     }
     globalWindow.location = routerOptions.context;
@@ -258,8 +258,8 @@ export const create: CreateRouterFunction = (...args: any) => {
     isHash = options.type !== 'browser';
     const eventType = isHash ? 'hashchange' : 'popstate';
 
-    listener((locationData) => {
-      callback((currentLocation = locationData));
+    listener((location, isInit) => {
+      callback((currentLocation = location), isInit);
     });
 
     globalWindow.addEventListener(eventType, routerEventListener);
@@ -272,11 +272,12 @@ export const create: CreateRouterFunction = (...args: any) => {
       options = defaultOptions;
       isHash = true;
       globalWindow.location = globalLocation;
-      unmount = null;
       blockCallback = null;
       blockData = {};
     });
   }
+
+  warning(false, 'Router can only be created once!');
 };
 
 export const match = (locationData: Location, path: string, returnLocation?: Boolean) => {

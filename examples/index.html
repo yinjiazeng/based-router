@@ -9,7 +9,6 @@
   <div>
     <a href="#/">Home</a>
     <a id="list">List</a>
-    <a id="reload">刷新</a>
   </div>
   <div id="root"></div>
   <script src="https://unpkg.com/lodash@4.17.15/lodash.min.js"></script>
@@ -19,7 +18,7 @@
   <script src="../dist/router.min.js"></script>
   <script>
   const root = document.getElementById('root');
-  router.create(function(location) {
+  router.create(function(location, a) {
     let match;
     if (match = router.matchPath(location, '/')) {
       root.innerHTML = `这是首页`;
