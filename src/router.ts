@@ -9,9 +9,9 @@ import {
   BlockData,
   ListenerCallback,
   BlockCallback,
-  ReplaceFunction,
-  LocationFunction,
+  PushFunction,
   CreateRouterFunction,
+  LocationObject,
 } from './typings';
 
 const { location: globalLocation, history } = globalWindow;
@@ -21,8 +21,8 @@ let listeners: Array<ListenerCallback> = [];
 let extraData: ExtraLocation = {};
 // 是否创建过路由
 let created = false;
-// 是否允许执行路由监听器
-let allowCallListener = true;
+// 执行路由监听器标记，0不能执行，1可以执行，2可以执行，但不能执行冻结回调
+let listenerFlag = 1;
 // path对应的正则集合
 let pathRegexps: PathRegexp = {};
 // 是否是hash类型
@@ -74,9 +74,9 @@ export const block = (callback: BlockCallback) => {
   if (!blockCallback) {
     if (isFunction(callback)) {
       blockCallback = (enter: Function, restore: Function, toLocation: MergeLocation) => {
-        const isEnter = callback(currentLocation, toLocation, enter) !== false;
-        if (isEnter) {
-          enter(isEnter);
+        const isLeave = callback(currentLocation, toLocation, () => enter()) !== false;
+        if (isLeave) {
+          enter(isLeave);
         } else {
           restore(currentLocation.url);
         }
@@ -87,9 +87,9 @@ export const block = (callback: BlockCallback) => {
   }
 };
 
-export const callListener = () => {
+export const callListener = (location?: any) => {
   // 一次change可能有多个listeners，只创建一次location
-  let current: MergeLocation;
+  let current = location;
   listeners.forEach((callback) => {
     if (!current) {
       current = getMergeLocation();
@@ -99,30 +99,31 @@ export const callListener = () => {
 };
 
 export const routerEventListener = () => {
-  if (allowCallListener) {
+  if (listenerFlag) {
     // 检测路由是否冻结
-    if (isFunction(blockData.callback) || isFunction(blockCallback)) {
+    if (listenerFlag === 1 && (isFunction(blockData.callback) || isFunction(blockCallback))) {
       // 记录待跳转的数据
       if (!blockData.toLocation) {
         blockData.toLocation = getMergeLocation();
       }
 
-      const { url, reload: isReload, data } = blockData.toLocation;
+      const { toLocation } = blockData;
+      const { url, data, reload } = toLocation;
       const callback = blockData.callback || blockCallback;
 
       if (callback) {
         callback(
-          (isLeave: any) => {
+          (isLeave: boolean | undefined) => {
             blockData = {};
-            allowCallListener = true;
+            listenerFlag = 2;
             if (isLeave) {
-              callListener();
+              callListener(toLocation);
             } else {
-              location(url, data, isReload);
+              push(url, data, reload);
             }
           },
           (path: string) => {
-            allowCallListener = false;
+            listenerFlag = 0;
             blockData.toLocation = null;
             replace(path);
           },
@@ -132,12 +133,11 @@ export const routerEventListener = () => {
     } else {
       callListener();
     }
-  } else {
-    allowCallListener = true;
   }
+  listenerFlag = 1;
 };
 
-export const combinePath = (path: string = '') => {
+export const combinePath = (path: LocationObject | string = '') => {
   const url = restorePath(path);
   const searchIndex = url.indexOf('?');
   const hashIndex = url.indexOf('#');
@@ -195,18 +195,11 @@ export const locationHandle = (...args: any) => {
   }
 };
 
-function locationFunction(): Location;
-
-function locationFunction(...args: any): any {
-  if (!args.length) {
-    return getLocation();
-  }
+export const push: PushFunction = (...args: any) => {
   locationHandle('push', ...args);
-}
+};
 
-export const location: LocationFunction = locationFunction;
-
-export const replace: ReplaceFunction = (...args: any) => {
+export const replace: PushFunction = (...args: any) => {
   locationHandle('replace', ...args);
 };
 

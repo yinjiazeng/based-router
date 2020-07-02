@@ -50,14 +50,10 @@ export interface BlockCallback {
   (from: MergeLocation, to: MergeLocation, enter: Function): void;
 }
 
-export interface ReplaceFunction {
-  (path: string): void;
-  (path: string, reload: boolean): void;
-  (path: string, data: any, reload?: boolean): void;
-}
-
-export interface LocationFunction extends ReplaceFunction {
-  (): Location;
+export interface PushFunction {
+  (path: string | LocationObject): void;
+  (path: string | LocationObject, reload: boolean): void;
+  (path: string | LocationObject, data: any, reload?: boolean): void;
 }
 
 export interface CreateRouterFunction {

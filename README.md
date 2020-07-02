@@ -13,6 +13,7 @@ create(function(location) {
     // do something
   } else {
     // no match
+    replace('/');
   }
 });
 ```

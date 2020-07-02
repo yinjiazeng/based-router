@@ -8,7 +8,7 @@
 <body>
   <div>
     <a href="#/">Home</a>
-    <a href="#/list">List</a>
+    <a id="list">List</a>
   </div>
   <div id="root"></div>
   <script src="https://unpkg.com/lodash@4.17.15/lodash.min.js"></script>
@@ -32,9 +32,19 @@
     } else if (match = router.matchPath(location, '/detail/:id')) {
       root.innerHTML = `这是内容，id是${match.params.id}`;
     } else {
-      root.innerHTML = `404`;
+      router.replace('/')
     }
   });
+
+  router.block((from, to, enter) => {
+    if (from.pathname.startsWith('/detail') && to.pathname === '/list') {
+      return confirm('确定离开？');
+    }
+  });
+
+  document.getElementById('list').onclick = () => {
+    router.push('/list', { a: 1 }, true)
+  };
   </script>
 </body>
 </html>
