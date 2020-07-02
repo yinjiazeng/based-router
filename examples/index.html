@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>路由测试</title>
+</head>
+<body>
+  <div>
+    <a href="#/">Home</a>
+    <a href="#/list">List</a>
+  </div>
+  <div id="root"></div>
+  <script src="https://unpkg.com/lodash@4.17.15/lodash.min.js"></script>
+  <script>
+  window.warning = _.noop;
+  </script>
+  <script src="../dist/router.min.js"></script>
+  <script>
+  const root = document.getElementById('root');
+  router.create(function(location) {
+    if (router.matchPath(location, '/')) {
+      root.innerHTML = `这是首页`;
+    } else if (router.matchPath(location, '/list')) {
+      root.innerHTML =
+        `<ul>
+          <li><a href="#/detail/1">标题1</a></li>
+          <li><a href="#/detail/2">标题2</a></li>
+          <li><a href="#/detail/3">标题3</a></li>
+        </ul>`;
+    } else if (router.matchPath(location, '/detail/:id')) {
+      root.innerHTML = `这是内容，id是${location.params.id}`;
+    } else {
+      root.innerHTML = `404`;
+    }
+  });
+  </script>
+</body>
+</html>

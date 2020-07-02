@@ -25,6 +25,7 @@ export function pathToRegexp(path) {
     // * => (?:.*)?
     // /* => (?:\/.*)?
     .replace(/(\\\/)?\*/g, '(?:$1.*)?');
+
   return new RegExp(`^${regexpPath}\\/?$`, 'i');
 }
 
@@ -32,10 +33,12 @@ export function restorePath(object) {
   if (isString(object)) {
     return object;
   }
+
   let path = '';
   const {
     pathname, query, search, url, hash,
   } = object;
+
   if (!!url && isString(url)) {
     path = url;
   } else if (!!pathname && isString(pathname)) {
