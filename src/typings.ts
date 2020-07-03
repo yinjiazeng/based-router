@@ -2,6 +2,8 @@ export type AnyObject = {
   [key: string]: any;
 };
 
+export type RouterType = 'hash' | 'browser';
+
 export interface Location extends AnyObject {
   pathname: string;
   url: string;
@@ -32,7 +34,7 @@ export interface PathRegexp {
 }
 
 export interface RouterOptions {
-  type?: 'hash' | 'browser';
+  type?: RouterType;
   basename?: string;
   context?: AnyObject;
 }
