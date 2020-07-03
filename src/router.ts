@@ -59,7 +59,7 @@ const getOriginPath = () => {
 };
 
 const getMergeLocation = () => {
-  const mergeLocation = { ...getLocation(), ...extraData };
+  const mergeLocation = { ...location(), ...extraData };
   // 临时数据，仅用一次
   extraData = {};
   return mergeLocation;
@@ -155,7 +155,7 @@ const routeTo = (...args: any) => {
   }
 };
 
-export const getLocation = () => {
+export const location = () => {
   const originPath = getOriginPath();
   return parser(originPath.replace(new RegExp(`^${options.basename}`), ''));
 };
@@ -204,7 +204,7 @@ export const replace: PushFunction = (...args: any) => {
 };
 
 export const reload = () => {
-  const { url } = getLocation();
+  const { url } = location();
   replace(url, true);
 };
 
@@ -229,7 +229,7 @@ export const listener = (callback: ListenerCallback) => {
   if (isFunction(callback)) {
     listeners.push(callback);
     // 执行一次
-    callback(getLocation(), true);
+    callback(location(), true);
     return () => {
       removeListener(callback);
     };
@@ -258,8 +258,8 @@ export const create: CreateRouterFunction = (...args: any) => {
     isHash = options.type !== 'browser';
     const eventType = isHash ? 'hashchange' : 'popstate';
 
-    listener((location, isInit) => {
-      callback((currentLocation = location), isInit);
+    listener((loc, isInit) => {
+      callback((currentLocation = loc), isInit);
     });
 
     globalWindow.addEventListener(eventType, routerEventListener);
