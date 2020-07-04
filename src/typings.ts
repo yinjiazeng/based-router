@@ -11,14 +11,8 @@ export interface Location extends AnyObject {
   search: string;
   query: AnyObject;
   params: AnyObject;
+  data: AnyObject;
 }
-
-export interface ExtraLocation {
-  reload?: boolean;
-  data?: any;
-}
-
-export type MergeLocation = Location & ExtraLocation;
 
 export interface LocationObject extends AnyObject {
   pathname?: string;
@@ -27,6 +21,7 @@ export interface LocationObject extends AnyObject {
   search?: string;
   query?: AnyObject;
   params?: AnyObject;
+  data?: AnyObject;
 }
 
 export interface PathRegexp {
@@ -40,16 +35,20 @@ export interface RouterOptions {
 }
 
 export interface BlockData {
-  callback?(): void;
-  toLocation?: MergeLocation | null;
+  callback?(
+    leave: (isLeave?: boolean) => void,
+    restore: (url: string) => void,
+    toLocation: Location,
+  ): void;
+  toLocation?: Location | null;
 }
 
 export interface ListenerCallback {
-  (location: MergeLocation, isInit?: boolean): void;
+  (location: Location, isInit?: boolean): void;
 }
 
 export interface BlockCallback {
-  (from: MergeLocation, to: MergeLocation, enter: Function): void;
+  (from: Location, to: Location, enter: Function): void;
 }
 
 export interface PushFunction {

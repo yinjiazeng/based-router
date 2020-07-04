@@ -84,6 +84,7 @@ export const parser = (path: string): Location => {
   let search = '';
   const query = {};
   const params = {};
+  const data = {};
   const hashIndex = pathname.indexOf('#');
 
   if (hashIndex !== -1) {
@@ -117,5 +118,6 @@ export const parser = (path: string): Location => {
     search,
     query,
     params,
+    data,
   };
 };

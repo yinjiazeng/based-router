@@ -18,7 +18,8 @@
   <script src="../dist/router.min.js"></script>
   <script>
   const root = document.getElementById('root');
-  router.create(function(location, a) {
+  router.create(function(location) {
+    console.log(location)
     let match;
     if (match = router.matchPath(location, '/')) {
       root.innerHTML = `这是首页`;
@@ -43,7 +44,7 @@
   });
 
   document.getElementById('list').onclick = () => {
-    router.push('/list', { a: 1 }, true)
+    router.push('/list', ({ a: 1 }), true)
   };
   </script>
 </body>

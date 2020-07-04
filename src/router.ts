@@ -3,8 +3,6 @@ import { isFunction, isPlainObject, globalWindow, noop } from './utils';
 import { parser, pathToRegexp, normalizePath, restorePath } from './path';
 import {
   Location,
-  ExtraLocation,
-  MergeLocation,
   PathRegexp,
   BlockData,
   ListenerCallback,
@@ -18,7 +16,7 @@ const { location: globalLocation, history } = globalWindow;
 // 监听列表
 let listeners: Array<ListenerCallback> = [];
 // location额外的数据
-let extraData: ExtraLocation = {};
+let extraData: any = {};
 // 是否创建过路由
 let created = false;
 // 执行路由监听器标记，0不能执行，1可以执行，2可以执行，但不能执行冻结回调
@@ -37,7 +35,7 @@ const defaultOptions = {
 // 路由选项
 let options = defaultOptions;
 // 当前location
-let currentLocation: MergeLocation;
+let currentLocation: Location;
 // 阻塞回调
 let blockCallback: Function | null = null;
 // 卸载回调
@@ -86,7 +84,7 @@ const routerEventListener = () => {
       }
 
       const { toLocation } = blockData;
-      const { url, data, reload } = toLocation;
+      const { url, data, reload }: any = toLocation;
       const callback = blockData.callback || blockCallback;
 
       if (callback) {
@@ -163,7 +161,7 @@ export const location = () => {
 export const block = (callback: BlockCallback) => {
   if (!blockCallback) {
     if (isFunction(callback)) {
-      blockCallback = (enter: Function, restore: Function, toLocation: MergeLocation) => {
+      blockCallback = (enter: Function, restore: Function, toLocation: Location) => {
         const isLeave = callback(currentLocation, toLocation, () => enter()) !== false;
         if (isLeave) {
           enter(isLeave);
